@@ -36,5 +36,12 @@ namespace ParkBlazor.Models
 
         [Display(Name = "Created At")]
         public DateTime Created_at { get; set; } = DateTime.Now;
+
+        public Computers()
+        {
+
+        }
     }
+
+    
 }

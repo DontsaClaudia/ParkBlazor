@@ -77,10 +77,6 @@
     private bool isModalOpen = false;
     private Computers selectedComputer = new Computers();
 
-    public Computers()
-    {
-    }
-
     protected override async Task OnInitializedAsync()
     {
         computers = await ComputerService.GetAllComputersAsync();
