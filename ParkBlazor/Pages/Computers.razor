@@ -1,0 +1,42 @@
+﻿@page "/computers"
+
+@using ParkBlazor.Services;
+@inject ComputersService Ord
+<h3>Computers</h3>
+@if (ordis == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name.</th>
+                <th>Maker. (C)</th>
+                <th>Description. (F)</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in ordis)
+            {
+                <tr>
+                    <td>@forecast.Name</td>
+                    <td>@forecast.Maker</td>
+                    <td>@forecast.Description</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    List<ParkBlazor.Models.Computers> ordis = new List<ParkBlazor.Models.Computers>();
+    protected override async Task OnInitializedAsync()
+    {
+        ordis = await Ord.List();
+    }
+}

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\images\bg-title-01.jpg" />
+    <Content Remove="wwwroot\css\images\bg-title-02.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Authentification\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\css\images\bg-title-01.jpg" />
+    <Resource Include="wwwroot\css\images\bg-title-02.jpg" />
+  </ItemGroup>
+
+</Project>
