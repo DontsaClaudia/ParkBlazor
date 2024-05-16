@@ -1,24 +1,33 @@
-﻿namespace ParkBlazor.Models
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ParkBlazor.Models
 {
     public class Parks
     {
+        [Key]
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Adress { get; set; }
-        public DateTime? CreateDate { get; set; }
 
-        public Parks()
-        {
-            Id = 0;
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; } = string.Empty;
 
-        }
+        [Required]
+        [StringLength(255)]
+        public string Address { get; set; } = string.Empty;
 
-        public Parks(int id, string name, string adress, DateTime createdate)
+        [DataType(DataType.Date)]
+        public DateTime CreateDate { get; set; } = DateTime.Now;
+
+        public Parks() { }
+
+        public Parks(int id, string name, string address, DateTime createDate)
         {
             Id = id;
             Name = name;
-            Adress = adress;
-            CreateDate = createdate;
+            Address = address;
+            CreateDate = createDate;
         }
     }
 }
