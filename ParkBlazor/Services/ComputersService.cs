@@ -1,6 +1,10 @@
 ﻿
 using ParkBlazor.Models;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Net;
 
 namespace ParkBlazor.Services
 {
@@ -13,26 +17,28 @@ namespace ParkBlazor.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<Computers>> List()
+        public async Task<List<Computers>> GetAllComputersAsync()
         {
             return await _httpClient.GetFromJsonAsync<List<Computers>>("https://localhost:7195/api/Computers");
         }
 
-        public async Task<Computers> Add(Computers computer)
+        public async Task<Computers> AddComputerAsync(Computers computer)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/Computers", computer);
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7195/api/Computers", computer);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Computers>();
         }
 
-        public async Task<Computers> Update(Computers computer)
+        public async Task<Computers> UpdateComputerAsync(Computers computer)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/Computers/{computer.Id}", computer);
+            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7195/api/Computers/{computer.Id}", computer);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Computers>();
         }
 
-        public async Task<System.Net.HttpStatusCode> Delete(int id)
+        public async Task<HttpStatusCode> DeleteComputerAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/Computers/{id}");
+            var response = await _httpClient.DeleteAsync($"https://localhost:7195/api/Computers/{id}");
             return response.StatusCode;
         }
     }

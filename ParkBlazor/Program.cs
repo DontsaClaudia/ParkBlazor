@@ -7,7 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
 builder.Services.AddScoped<ComputersService>();
+
+builder.Services.AddHttpClient<ParksService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:5124/"); // Ajuste cette URL à celle de ton API
+});
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 

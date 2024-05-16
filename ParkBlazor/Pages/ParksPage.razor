@@ -1,8 +1,7 @@
-﻿
-@page "/computers"
+﻿@page "/parks"
 @using ParkBlazor.Models
 @using ParkBlazor.Services
-@inject ComputersService ComputerService
+@inject ParksService ParkService
 
 <style>
     .modal-content, .table, button {
@@ -38,30 +37,30 @@
         }
 </style>
 
-<h3 class="text-center p-3" style="background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); color: white;">Computers</h3>
+<h3 class="text-center p-3" style="background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); color: white;">Parks Page</h3>
 
 <div class="container">
-    <button class="btn btn-success my-2" @onclick="() => ShowModal(0)">Add New Computer</button>
+    <button class="btn btn-success my-2" @onclick="() => ShowModal(0)">Add New Park</button>
 
     <table class="table table-hover">
         <thead class="thead-dark">
             <tr>
-                <th>Name </th>
-                <th>Maker</th>
-                <th>Description</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Created On</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        @foreach (var computer in computers)
+        @foreach (var park in parks)
         {
             <tr>
-                <td>@computer.Name</td>
-                <td>@computer.Maker</td>
-                <td>@computer.Description</td>
+                <td>@park.Name</td>
+                <td>@park.Address</td>
+                <td>@park.CreateDate.ToShortDateString()</td>
                 <td>
-                    <button class="btn btn-primary" @onclick="() => ShowModal(computer.Id)">Edit</button>
-                    <button class="btn btn-danger" @onclick="() => ConfirmDelete(computer.Id)">Delete</button>
+                    <button class="btn btn-primary" @onclick="() => ShowModal(park.Id)">Edit</button>
+                    <button class="btn btn-danger" @onclick="() => ConfirmDelete(park.Id)">Delete</button>
                 </td>
             </tr>
         }
@@ -70,31 +69,27 @@
 </div>
 
 @* Modals here *@
-<EditComputerModal ModalTitle="Computer Details" IsOpen="@isModalOpen" Computer="@selectedComputer" OnClose="HandleModalClose" />
+<EditParkModal ModalTitle="Park Details" IsOpen="@isModalOpen" Park="@selectedPark" OnClose="HandleModalClose" />
 
 @code {
-    private List<Computers> computers = new List<Computers>();
+    private List<Parks> parks = new List<Parks>();
     private bool isModalOpen = false;
-    private Computers selectedComputer = new Computers();
-
-    public Computers()
-    {
-    }
+    private Parks selectedPark = new Parks();
 
     protected override async Task OnInitializedAsync()
     {
-        computers = await ComputerService.GetAllComputersAsync();
+        parks = await ParkService.GetAllParksAsync();
     }
 
     void ShowModal(int id)
     {
         if (id == 0)
         {
-            selectedComputer = new Computers(); // For add new
+            selectedPark = new Parks(); // For add new
         }
         else
         {
-            selectedComputer = computers.FirstOrDefault(c => c.Id == id);
+            selectedPark = parks.FirstOrDefault(p => p.Id == id);
         }
         isModalOpen = true;
     }
@@ -103,7 +98,7 @@
     {
         if (isChanged)
         {
-            // Refresh computers list or handle the change
+            // Refresh parks list or handle the change
         }
         isModalOpen = false;
     }
@@ -111,6 +106,6 @@
     void ConfirmDelete(int id)
     {
         // Show confirmation dialog before deleting
-        // If confirmed, call ComputerService.DeleteComputerAsync(id)
+        // If confirmed, call ParkService.DeleteParkAsync(id)
     }
 }
