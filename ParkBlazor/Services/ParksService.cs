@@ -17,15 +17,15 @@ namespace ParkBlazor.Services
         }
 
         // Méthode pour obtenir tous les parcs
-        public async Task<List<Parks>> GetAllParksAsync()
+        public async Task<List<Parks?>> GetAllParksAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Parks>>("api/parks");
+            return await _httpClient.GetFromJsonAsync<List<Parks?>>("https://localhost:7227/api/Parks");
         }
 
         // Méthode pour ajouter un nouveau parc
         public async Task<Parks> AddParkAsync(Parks park)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/parks", park);
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7227/api/Parks", park);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Parks>();
         }
@@ -33,7 +33,7 @@ namespace ParkBlazor.Services
         // Méthode pour mettre à jour un parc existant
         public async Task<Parks> UpdateParkAsync(Parks park)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/parks/{park.Id}", park);
+            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7227/api/Parks/{park.Id}", park);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Parks>();
         }
@@ -41,7 +41,7 @@ namespace ParkBlazor.Services
         // Méthode pour supprimer un parc
         public async Task<HttpStatusCode> DeleteParkAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/parks/{id}");
+            var response = await _httpClient.DeleteAsync($"https://localhost:7227/api/Parks/{id}");
             return response.StatusCode;
         }
     }
