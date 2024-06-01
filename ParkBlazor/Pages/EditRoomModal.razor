@@ -1,0 +1,67 @@
+﻿@using ParkBlazor.Models
+@using ParkBlazor.Services
+@inject RoomsService RoomService
+
+<div class="modal @(IsOpen ? "show" : "")" tabindex="-1" style="display:@(IsOpen ? "block" : "none")">
+    <div class="modal-dialog border-radius box-shadow">
+        <div class="modal-content border-radius box-shadow">
+            <div class="modal-header gradient-bg border-radius">
+                <h5 class="modal-title">@ModalTitle</h5>
+                <button type="button" class="close" aria-label="Close" @onclick="CloseModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control border-radius box-shadow" @bind="Room.Name" />
+                </div>
+                <div class="form-group">
+                    <label for="parksId">Parks ID</label>
+                    <input type="number" id="parksId" class="form-control border-radius box-shadow" @bind="Room.ParksId" />
+                </div>
+                <div class="form-group">
+                    <label for="createDate">Create Date</label>
+                    <input type="date" id="createDate" class="form-control border-radius box-shadow" @bind="Room.CreateDate" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close border-radius box-shadow" @onclick="CloseModal">Close</button>
+                <button type="button" class="btn btn-save border-radius box-shadow" @onclick="SaveChanges">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? ModalTitle { get; set; }
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public Rooms Room { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    private async Task SaveChanges()
+    {
+        if (Room.Id == 0)
+        {
+            await RoomService.AddRoomAsync(Room);
+        }
+        else
+        {
+            await RoomService.UpdateRoomAsync(Room);
+        }
+
+        await OnClose.InvokeAsync(true);
+    }
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+}

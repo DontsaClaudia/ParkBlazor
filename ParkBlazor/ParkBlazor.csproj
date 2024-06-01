@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\images\3ilpark.png" />
     <Content Remove="wwwroot\css\images\bg-title-01.jpg" />
     <Content Remove="wwwroot\css\images\bg-title-02.jpg" />
   </ItemGroup>
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="wwwroot\css\images\3ilpark.png" />
     <Resource Include="wwwroot\css\images\bg-title-01.jpg" />
     <Resource Include="wwwroot\css\images\bg-title-02.jpg" />
   </ItemGroup>

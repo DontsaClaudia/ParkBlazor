@@ -6,51 +6,64 @@
 @inject IJSRuntime JSRuntime
 
 <style>
+    .modal-content, .table, button {
+        border-radius: 8px; /* Bordures arrondies pour les modaux, tables et boutons */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Ombre pour les éléments */
+    }
+
+    .modal-backdrop {
+        display: block; /* Assure que l'arrière-plan sombre s'affiche même sans JS */
+        opacity: 0.5 !important; /* Plus de transparence */
+    }
+
+    .modal.show .modal-dialog {
+        transform: translate(0, 0); /* Ajustement pour les animations ou transitions */
+    }
+
+    .btn-primary, .btn-success, .btn-danger {
+        border: none;
+    }
+
+    .btn:hover {
+        opacity: 0.85; /* Effet au survol pour les boutons */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Ombre plus prononcée au survol */
+    }
+
+    .btn-save {
+        background-color: #ff5733; /* Couleur de sauvegarde */
+        color: white;
+    }
+
+    .btn-close, .btn-add-new {
+        background-color: #0b8699; /* Couleur pour fermer et ajouter */
+        color: white;
+    }
+
+        .btn-save:hover, .btn-close:hover, .btn-add-new:hover {
+            opacity: 0.85;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+    .table {
+        background-color: #ffffff; /* Fond blanc pour la table pour mieux ressortir sur fond clair */
+    }
+
+        .table thead.thead-dark th {
+            background: linear-gradient(to right, #343a40, #1c1e22); /* Gradient pour l'en-tête de la table */
+            color: white;
+        }
+
     .gradient-bg {
-        background: linear-gradient(to right, #004a87, #00a7e1);
+        background: linear-gradient(to right, #0b8699, #ff5733); /* Gradient pour l'en-tête de la page */
         color: white;
     }
 
     .border-radius {
-        border-radius: 12px;
+        border-radius: 8px;
     }
 
     .box-shadow {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-custom {
-        background: linear-gradient(to right, #004a87, #00a7e1);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-custom:hover {
-        opacity: 0.9;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-    }
-
-    .modal-backdrop {
-        display: block;
-        opacity: 0.5 !important;
-    }
-
-    .modal.show .modal-dialog {
-        transform: translate(0, 0);
-    }
-
-    .table {
-        background-color: #ffffff;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .table thead.thead-dark th {
-        background: linear-gradient(to right, #343a40, #1c1e22);
-        color: white;
     }
 </style>
 
