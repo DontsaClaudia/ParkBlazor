@@ -19,13 +19,28 @@
     }
 
     .btn-primary, .btn-success, .btn-danger {
-        border: none; /* Retire les bordures par défaut des boutons pour un look plus épuré */
+        border: none;
     }
 
     .btn:hover {
         opacity: 0.85; /* Effet au survol pour les boutons */
         box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Ombre plus prononcée au survol */
     }
+
+    .btn-save {
+        background-color: #ff5733; /* Couleur de sauvegarde */
+        color: white;
+    }
+
+    .btn-close, .btn-add-new {
+        background-color: #0b8699; /* Couleur pour fermer et ajouter */
+        color: white;
+    }
+
+        .btn-save:hover, .btn-close:hover, .btn-add-new:hover {
+            opacity: 0.85;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
 
     .table {
         background-color: #ffffff; /* Fond blanc pour la table pour mieux ressortir sur fond clair */
@@ -35,14 +50,27 @@
             background: linear-gradient(to right, #343a40, #1c1e22); /* Gradient pour l'en-tête de la table */
             color: white;
         }
+
+    .gradient-bg {
+        background: linear-gradient(to right, #0b8699, #ff5733); /* Gradient pour l'en-tête de la page */
+        color: white;
+    }
+
+    .border-radius {
+        border-radius: 8px;
+    }
+
+    .box-shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 </style>
 
-<h3 class="text-center p-3" style="background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); color: white;">Parks Page</h3>
+<h3 class="text-center p-3 gradient-bg border-radius">Parks Page</h3>
 
 <div class="container">
-    <button class="btn btn-success my-2" @onclick="() => ShowModal(0)">Add New Park</button>
+    <button class="btn btn-add-new my-2 border-radius " @onclick="() => ShowModal(0)">Add New Park</button>
 
-    <table class="table table-hover">
+    <table class="table table-hover border-radius">
         <thead class="thead-dark">
             <tr>
                 <th>Name</th>
@@ -59,8 +87,8 @@
                 <td>@park.Address</td>
                 <td>@park.CreateDate.ToShortDateString()</td>
                 <td>
-                    <button class="btn btn-primary" @onclick="() => ShowModal(park.Id)">Edit</button>
-                    <button class="btn btn-danger" @onclick="() => ConfirmDelete(park.Id)">Delete</button>
+                        <button class="btn btn-primary border-radius" @onclick="() => ShowModal(park.Id)">Edit</button>
+                        <button class="btn btn-danger border-radius" @onclick="() => ConfirmDelete(park.Id)">Delete</button>
                 </td>
             </tr>
         }

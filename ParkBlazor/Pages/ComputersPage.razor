@@ -1,8 +1,9 @@
-﻿
-@page "/computers"
+﻿@page "/computers"
 @using ParkBlazor.Models
 @using ParkBlazor.Services
+@using System.Net
 @inject ComputersService ComputerService
+@inject IJSRuntime JSRuntime
 
 <style>
     .modal-content, .table, button {
@@ -20,13 +21,28 @@
     }
 
     .btn-primary, .btn-success, .btn-danger {
-        border: none; /* Retire les bordures par défaut des boutons pour un look plus épuré */
+        border: none; 
     }
 
     .btn:hover {
         opacity: 0.85; /* Effet au survol pour les boutons */
         box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Ombre plus prononcée au survol */
     }
+
+    .btn-save {
+        background-color: #ff5733; /* Couleur de sauvegarde */
+        color: white;
+    }
+
+    .btn-close, .btn-add-new {
+        background-color: #0b8699; /* Couleur pour fermer et ajouter */
+        color: white;
+    }
+
+        .btn-save:hover, .btn-close:hover, .btn-add-new:hover {
+            opacity: 0.85;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
 
     .table {
         background-color: #ffffff; /* Fond blanc pour la table pour mieux ressortir sur fond clair */
@@ -36,35 +52,54 @@
             background: linear-gradient(to right, #343a40, #1c1e22); /* Gradient pour l'en-tête de la table */
             color: white;
         }
+
+    .gradient-bg {
+        background: linear-gradient(to right, #0b8699, #ff5733); /* Gradient pour l'en-tête de la page */
+        color: white;
+    }
+
+    .border-radius {
+        border-radius: 8px;
+    }
+
+    .box-shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 </style>
 
-<h3 class="text-center p-3" style="background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); color: white;">Computers</h3>
+<h3 class="text-center p-3 gradient-bg border-radius box-shadow">Computers</h3>
 
-<div class="container">
-    <button class="btn btn-success my-2" @onclick="() => ShowModal(0)">Add New Computer</button>
+<div class="container mt-4">
+    <button class="btn btn-save my-2 btn-custom border-radius" @onclick="() => ShowModal(0)" >Add New Computer</button>
 
-    <table class="table table-hover">
+    <table class="table table-hover mt-4">
         <thead class="thead-dark">
             <tr>
-                <th>Name </th>
-                <th>Maker</th>
-                <th>Description</th>
+                <th>Name</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Caption</th>
+                <th>Total Physical Memory</th>
+                <th>Room</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        @foreach (var computer in computers)
-        {
-            <tr>
-                <td>@computer.Name</td>
-                <td>@computer.Maker</td>
-                <td>@computer.Description</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="() => ShowModal(computer.Id)">Edit</button>
-                    <button class="btn btn-danger" @onclick="() => ConfirmDelete(computer.Id)">Delete</button>
-                </td>
-            </tr>
-        }
+            @foreach (var computer in computers)
+            {
+                <tr>
+                    <td>@computer.Name</td>
+                    <td>@computer.Manufacturer</td>
+                    <td>@computer.Model</td>
+                    <td>@computer.Caption</td>
+                    <td>@computer.TotalPhysicalMemory</td>
+                    <td>@computer.RoomId</td>
+                    <td>
+                        <button class="btn btn-primary border-radius" @onclick="() => ShowModal(computer.Id)">Edit</button>
+                        <button class="btn btn-danger border-radius" @onclick="() => ConfirmDelete(computer.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>
@@ -86,7 +121,7 @@
     {
         if (id == 0)
         {
-            selectedComputer = new Computers(); // For add new
+            selectedComputer = new Computers(); // Utilisation du constructeur par défaut
         }
         else
         {
@@ -95,18 +130,25 @@
         isModalOpen = true;
     }
 
-    void HandleModalClose(bool isChanged)
+    async Task HandleModalClose(bool isChanged)
     {
         if (isChanged)
         {
-            // Refresh computers list or handle the change
+            computers = await ComputerService.GetAllComputersAsync();
         }
         isModalOpen = false;
     }
 
-    void ConfirmDelete(int id)
+    async Task ConfirmDelete(int id)
     {
-        // Show confirmation dialog before deleting
-        // If confirmed, call ComputerService.DeleteComputerAsync(id)
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this computer?");
+        if (confirmed)
+        {
+            var result = await ComputerService.DeleteComputerAsync(id);
+            if (result == HttpStatusCode.OK)
+            {
+                computers = await ComputerService.GetAllComputersAsync();
+            }
+        }
     }
 }

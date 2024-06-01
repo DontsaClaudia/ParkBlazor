@@ -1,0 +1,79 @@
+﻿@using ParkBlazor.Models
+@using ParkBlazor.Services
+@inject ComputersService ComputerService
+
+<div class="modal @(IsOpen ? "show" : "")" tabindex="-1" style="display:@(IsOpen ? "block" : "none")">
+    <div class="modal-dialog border-radius box-shadow">
+        <div class="modal-content border-radius box-shadow">
+            <div class="modal-header gradient-bg border-radius">
+                <h5 class="modal-title">@ModalTitle</h5>
+                <button type="button" class="close" aria-label="Close" @onclick="CloseModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control border-radius box-shadow" @bind="Computer.Name" />
+                </div>
+                <div class="form-group">
+                    <label for="manufacturer">Manufacturer</label>
+                    <input type="text" id="manufacturer" class="form-control border-radius box-shadow" @bind="Computer.Manufacturer" />
+                </div>
+                <div class="form-group">
+                    <label for="model">Model</label>
+                    <input type="text" id="model" class="form-control border-radius box-shadow" @bind="Computer.Model" />
+                </div>
+                <div class="form-group">
+                    <label for="caption">Caption</label>
+                    <input type="text" id="caption" class="form-control border-radius box-shadow" @bind="Computer.Caption" />
+                </div>
+                <div class="form-group">
+                    <label for="totalPhysicalMemory">Total Physical Memory</label>
+                    <input type="number" id="totalPhysicalMemory" class="form-control border-radius box-shadow" @bind="Computer.TotalPhysicalMemory" />
+                </div>
+                <div class="form-group">
+                    <label for="roomId">Room ID</label>
+                    <input type="number" id="roomId" class="form-control border-radius box-shadow" @bind="Computer.RoomId" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary border-radius box-shadow" @onclick="CloseModal">Close</button>
+                <button type="button" class="btn btn-primary border-radius box-shadow" @onclick="SaveChanges">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ModalTitle { get; set; }
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public Computers Computer { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    private async Task SaveChanges()
+    {
+        if (Computer.Id == 0)
+        {
+            await ComputerService.AddComputerAsync(Computer);
+        }
+        else
+        {
+            await ComputerService.UpdateComputerAsync(Computer);
+        }
+
+        await OnClose.InvokeAsync(true);
+    }
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+}

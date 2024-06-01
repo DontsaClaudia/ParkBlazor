@@ -9,10 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<ComputersService>();
+builder.Services.AddScoped<RoomsService>();
 
 builder.Services.AddHttpClient<ParksService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:5124/"); // Ajuste cette URL à celle de ton API
+    client.BaseAddress = new Uri("https://localhost:5124/"); // Route API de parks
 });
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
