@@ -1,0 +1,27 @@
+﻿@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<canvas id="@CanvasId" width="400" height="200"></canvas>
+
+@code {
+    [Parameter] public string CanvasId { get; set; }
+    [Parameter] public string Type { get; set; }
+    [Parameter] public object Data { get; set; }
+    [Parameter] public object Options { get; set; }
+
+    private DotNetObjectReference<ChartComponent> _dotNetRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("createChart", CanvasId, Type, Data, Options);
+        }
+    }
+
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
+    }
+}

@@ -1,75 +1,104 @@
-﻿using ParkBlazor.Models;
+﻿using Blazored.LocalStorage;
+using ParkBlazor.Models;
 using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
-
-namespace ParkBlazor.Services
+public class ComputersService
 {
-    public class ComputersService
+    private readonly HttpClient _httpClient;
+    private readonly ILocalStorageService _localStorage;
+    private string _token;
+
+    public ComputersService(HttpClient httpClient, ILocalStorageService localStorage)
     {
-        private readonly HttpClient _httpClient;
+        _httpClient = httpClient;
+        _localStorage = localStorage;
+    }
 
-        public ComputersService(HttpClient httpClient)
+    private async Task InitializeAuthorizationHeader()
+    {
+        if (string.IsNullOrEmpty(_token))
         {
-            _httpClient = httpClient;
+            _token = await _localStorage.GetItemAsync<string>("authToken");
         }
 
-        public async Task<List<Computers>> GetAllComputersAsync()
+        if (!string.IsNullOrEmpty(_token))
         {
-            return await _httpClient.GetFromJsonAsync<List<Computers>>("https://localhost:7227/api/Computers");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
         }
+    }
 
-        public async Task<Computers> GetComputerByIdAsync(int id)
-        {
-            return await _httpClient.GetFromJsonAsync<Computers>($"https://localhost:7227/api/Computers/{id}");
-        }
+    public async Task SetAuthorizationHeader(string token)
+    {
+        _token = token;
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _token);
+        await _localStorage.SetItemAsync("authToken", token);
+    }
 
-        public async Task<Computers> AddComputerAsync(Computers computer)
+    public async Task<List<Computers>> GetAllComputersAsync()
+    {
+        await InitializeAuthorizationHeader();
+        return await _httpClient.GetFromJsonAsync<List<Computers>>("http://localhost:5165/api/Computers");
+    }
+
+    public async Task<Computers> GetComputerByIdAsync(int id)
+    {
+        await InitializeAuthorizationHeader();
+        return await _httpClient.GetFromJsonAsync<Computers>($"http://localhost:5165/api/Computers/{id}");
+    }
+
+    public async Task<Computers> AddComputerAsync(Computers computer)
+    {
+        await InitializeAuthorizationHeader();
+        var response = await _httpClient.PostAsJsonAsync("http://localhost:5165/api/Computers", computer);
+        if (response.IsSuccessStatusCode)
         {
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:7227/api/Computers", computer);
-            response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Computers>();
         }
-
-        public async Task<Computers> UpdateComputerAsync(Computers computer)
+        else
         {
-            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7227/api/Computers/{computer.Id}", computer);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Computers>();
+            return new Computers();
         }
+    }
 
-        public async Task<HttpStatusCode> DeleteComputerAsync(int id)
-        {
-            var response = await _httpClient.DeleteAsync($"https://localhost:7227/api/Computers/{id}");
-            return response.StatusCode;
-        }
+    public async Task<Computers> UpdateComputerAsync(Computers computer)
+    {
+        await InitializeAuthorizationHeader();
+        var response = await _httpClient.PutAsJsonAsync($"http://localhost:5165/api/Computers/{computer.Id}", computer);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Computers>();
+    }
 
-        public async Task<List<Computers>> SearchComputersAsync(string manufacturer, string model, int? roomId, int? minMemory, int? maxMemory)
-        {
-            var queryParams = new List<string>();
+    public async Task<HttpStatusCode> DeleteComputerAsync(int id)
+    {
+        await InitializeAuthorizationHeader();
+        var response = await _httpClient.DeleteAsync($"http://localhost:5165/api/Computers/{id}");
+        return response.StatusCode;
+    }
 
-            if (!string.IsNullOrEmpty(manufacturer))
-                queryParams.Add($"manufacturer={manufacturer}");
-            if (!string.IsNullOrEmpty(model))
-                queryParams.Add($"model={model}");
-            if (roomId.HasValue)
-                queryParams.Add($"roomId={roomId.Value}");
-            if (minMemory.HasValue)
-                queryParams.Add($"minMemory={minMemory.Value}");
-            if (maxMemory.HasValue)
-                queryParams.Add($"maxMemory={maxMemory.Value}");
+    public async Task<List<Computers>> SearchComputersAsync(string manufacturer, string model, int? roomId, int? minMemory, int? maxMemory)
+    {
+        await InitializeAuthorizationHeader();
+        var queryParams = new List<string>();
 
-            var queryString = string.Join("&", queryParams);
-            return await _httpClient.GetFromJsonAsync<List<Computers>>($"https://localhost:7227/api/Computers/search?{queryString}");
-        }
+        if (!string.IsNullOrEmpty(manufacturer))
+            queryParams.Add($"manufacturer={manufacturer}");
+        if (!string.IsNullOrEmpty(model))
+            queryParams.Add($"model={model}");
+        if (roomId.HasValue)
+            queryParams.Add($"roomId={roomId.Value}");
+        if (minMemory.HasValue)
+            queryParams.Add($"minMemory={minMemory.Value}");
+        if (maxMemory.HasValue)
+            queryParams.Add($"maxMemory={maxMemory.Value}");
 
-        public async Task<bool> ComputerExistsAsync(Computers computer)
-        {
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:7227/api/Computers/exists", computer);
-            return await response.Content.ReadFromJsonAsync<bool>();
-        }
+        var queryString = string.Join("&", queryParams);
+        return await _httpClient.GetFromJsonAsync<List<Computers>>($"http://localhost:5165/api/Computers/search?{queryString}");
+    }
+
+    public async Task<bool> ComputerExistsAsync(Computers computer)
+    {
+        await InitializeAuthorizationHeader();
+        var response = await _httpClient.PostAsJsonAsync("http://localhost:5165/api/Computers/exists", computer);
+        return await response.Content.ReadFromJsonAsync<bool>();
     }
 }

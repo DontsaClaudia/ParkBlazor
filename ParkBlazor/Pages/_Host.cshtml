@@ -10,34 +10,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    
+
     <link href="ParkBlazor.styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png" />
 
     <!-- Fontfaces CSS-->
-    <link href="css/font-face.css" rel="stylesheet" >
-    <link href="css/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" >
-    <link href="css/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" >
-    <link href="css/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" >
-
-    <!-- Bootstrap CSS
-    <link href="css/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">-->
+    <link href="css/font-face.css" rel="stylesheet">
+    <link href="css/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="css/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet">
 
     <!-- Vendor CSS-->
     <link href="css/vendor/animsition/animsition.min.css" rel="stylesheet">
-    <!--<link href="css/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all"> -->
-    <link href="css/vendor/wow/animate.css" rel="stylesheet" >
-    <link href="css/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" >
+    <link href="css/vendor/wow/animate.css" rel="stylesheet">
+    <link href="css/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet">
     <link href="css/vendor/slick/slick.css" rel="stylesheet">
-    <link href="css/vendor/select2/select2.min.css" rel="stylesheet" >
-    <link href="css/vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" >
+    <link href="css/vendor/select2/select2.min.css" rel="stylesheet">
+    <link href="css/vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
 
-    
     <!-- Main CSS-->
     <link href="css/site.css" rel="stylesheet" />
-    <link href="css/theme.css" rel="stylesheet" >
-
-   
+    <link href="css/theme.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
@@ -55,9 +49,17 @@
         <a class="dismiss">🗙</a>
     </div>
 
-
     <script src="_framework/blazor.server.js"></script>
-    <script src="css/login.js"> </script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.createChart = (canvasId, type, data, options) => {
+            var ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: type,
+                data: data,
+                options: options
+            });
+        };
+    </script>
 </body>
 </html>

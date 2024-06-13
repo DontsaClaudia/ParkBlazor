@@ -10,6 +10,10 @@
     <Content Remove="wwwroot\css\images\3ilpark.png" />
     <Content Remove="wwwroot\css\images\bg-title-01.jpg" />
     <Content Remove="wwwroot\css\images\bg-title-02.jpg" />
+    <Content Remove="wwwroot\css\images\facebook.png" />
+    <Content Remove="wwwroot\css\images\google.png" />
+    <Content Remove="wwwroot\css\images\net.png" />
+    <Content Remove="wwwroot\css\images\twitter.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,9 +21,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="BlazorJSProxy" Version="1.0.2" />
+    <PackageReference Include="Chart.js" Version="3.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="wwwroot\css\images\3ilpark.png" />
     <Resource Include="wwwroot\css\images\bg-title-01.jpg" />
     <Resource Include="wwwroot\css\images\bg-title-02.jpg" />
+    <Resource Include="wwwroot\css\images\facebook.png" />
+    <Resource Include="wwwroot\css\images\google.png" />
+    <Resource Include="wwwroot\css\images\net.png" />
+    <Resource Include="wwwroot\css\images\twitter.png" />
   </ItemGroup>
 
 </Project>

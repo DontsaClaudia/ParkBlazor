@@ -1,0 +1,155 @@
+﻿@page "/users"
+@using ParkBlazor.Models
+@using ParkBlazor.Services
+@inject UsersService UserService
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<style>
+    .modal-content, .table, button {
+        border-radius: 8px; /* Bordures arrondies pour les modaux, tables et boutons */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Ombre pour les éléments */
+    }
+
+    .modal-backdrop {
+        display: block; 
+        opacity: 0.5 !important; 
+    }
+
+    .modal.show .modal-dialog {
+        transform: translate(0, 0); 
+    }
+
+    .btn-primary, .btn-success, .btn-danger {
+        border: none;
+    }
+
+    .btn:hover {
+        opacity: 0.85; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+    }
+
+    .btn-save {
+        background-color: #ff5733; 
+        color: white;
+    }
+
+    .btn-close, .btn-add-new {
+        background-color: #0b8699; 
+        color: white;
+    }
+
+        .btn-save:hover, .btn-close:hover, .btn-add-new:hover {
+            opacity: 0.85;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+    .table {
+        background-color: #ffffff; /* Fond blanc pour la table pour mieux ressortir sur fond clair */
+    }
+
+        .table thead.thead-dark th {
+            background: linear-gradient(to right, #343a40, #1c1e22); /* Gradient pour l'en-tête de la table */
+            color: white;
+        }
+
+    .gradient-bg {
+        background: linear-gradient(to right, #0b8699, #ff5733); /* Gradient pour l'en-tête de la page */
+        color: white;
+    }
+
+    .border-radius {
+        border-radius: 8px;
+    }
+
+    .box-shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+
+<h3 class="text-center p-3 gradient-bg border-radius box-shadow">Users</h3>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <input type="text" @bind="searchTerm" class="form-control" placeholder="Search Person" style="width: 300px;" />
+        <button @onclick="AddUser" class="btn btn-add-new">Add New User</button>
+    </div>
+
+    <table class="table table-hover mt-4">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Role</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in filteredUsers)
+            {
+                <tr>
+                    <td><img src="https://via.placeholder.com/50" alt="@user.Firstname @user.Lastname" class="rounded-circle" /></td>
+                    <td>@user.Firstname @user.Lastname</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>@user.Rules?.Name</td>
+                    <td>
+                        <button @onclick="() => EditUser(user.Id)" class="btn btn-sm btn-warning">Edit</button>
+                        <button @onclick="() => DeleteUser(user.Id)" class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private List<ParkBlazor.Models.Users> users = new List<ParkBlazor.Models.Users>();
+    private List<ParkBlazor.Models.Users> filteredUsers => string.IsNullOrWhiteSpace(searchTerm) ? users : users.Where(u => u.Firstname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || u.Lastname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+    private string searchTerm = string.Empty;
+    private bool isInitialized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Removed InitializeAuthorization from here
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isInitialized)
+        {
+            await InitializeAuthorization();
+            users = await UserService.GetUsersAsync();
+            isInitialized = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task InitializeAuthorization()
+    {
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            await UserService.SetAuthorizationHeader(token);
+        }
+    }
+
+    private void AddUser()
+    {
+        Navigation.NavigateTo("/adduser");
+    }
+
+    private void EditUser(int id)
+    {
+        Navigation.NavigateTo($"/edituser/{id}");
+    }
+
+    private async Task DeleteUser(int id)
+    {
+        await UserService.DeleteUserAsync(id);
+        users = await UserService.GetUsersAsync();
+    }
+}

@@ -1,14 +1,19 @@
-﻿namespace ParkBlazor.Models
-{
-    public class Users
-    {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Email { get; set; }
-        public string? Password { get; set; }
-		public string? ConfirmPassword { get; set; }
-		public string PhoneNumber { get; set; }
-        = string.Empty; 
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace ParkBlazor.Models
+{
+    public class Users : IdentityUser<int>
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Firstname { get; set; } = string.Empty;
+        public string Lastname { get; set; } = string.Empty;
+        [ForeignKey("Rules")]
+        public int? Rulesid { get; set; }
+        public Rules? Rules { get; set; }
+        public bool IsConnected { get; set; } = false;
+        public DateTime Created { get; set; } = DateTime.Now;
     }
 }
