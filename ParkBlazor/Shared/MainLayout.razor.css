@@ -5,6 +5,15 @@
     background-color: #f7f7f7 ;
 }
 
+.welcome-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #0b8699, #f7f7f7);
+}
+
+
 main {
     flex: 1;
 }

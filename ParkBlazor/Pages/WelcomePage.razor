@@ -1,0 +1,29 @@
+﻿@page "/welcome"
+@layout WelcomeLayout
+@inject NavigationManager Navigation
+
+<style>
+    .welcome-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to right, #0b8699, #FA8519);
+    }
+
+    .welcome-image {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+<div class="page">
+    <img src="css/images/log.png" alt="Welcome" class="welcome-image" />
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(5000);
+        Navigation.NavigateTo("/index");
+    }
+}

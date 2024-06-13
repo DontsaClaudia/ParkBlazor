@@ -1,4 +1,4 @@
-﻿@page "/login"
+﻿@page "/"
 @using ParkBlazor.Services
 @layout LoginLayout
 @inject AuthenticationService AuthenticationService
@@ -28,7 +28,7 @@
                 <p>or sign in with</p>
                 <div class="social-icons">
                     <a href="#"><img src="css/images/google.png" alt="Google" /></a>
-                    <a href="#"><img src="images/twitter.png" alt="Twitter" /></a>
+                    <a href="#"><img src="css/images/twitter.png" alt="Twitter" /></a>
                     <a href="#"><img src="css/images/facebook.png" alt="Facebook" /></a>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         var isSuccess = await AuthenticationService.Login(loginEmail, loginPassword);
         if (isSuccess)
         {
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/welcome");
         }
         else
         {
