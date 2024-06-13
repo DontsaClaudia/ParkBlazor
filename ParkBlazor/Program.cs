@@ -16,7 +16,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAuthorizationCore();
 
 // Register HttpClient for the API using configuration
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5165") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5010") });
 
 // Register AuthService
 builder.Services.AddScoped<AuthenticationService>();

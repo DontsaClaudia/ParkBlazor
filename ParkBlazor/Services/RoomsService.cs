@@ -38,19 +38,19 @@ namespace ParkBlazor.Services
         public async Task<List<Rooms>> GetAllRoomsAsync()
         {
             await InitializeAuthorizationHeader();
-            return await _httpClient.GetFromJsonAsync<List<Rooms>>("http://localhost:5165/api/Rooms");
+            return await _httpClient.GetFromJsonAsync<List<Rooms>>("http://localhost:5010/api/Rooms");
         }
 
         public async Task<Rooms> GetRoomByIdAsync(int id)
         {
             await InitializeAuthorizationHeader();
-            return await _httpClient.GetFromJsonAsync<Rooms>($"http://localhost:5165/api/Rooms/{id}");
+            return await _httpClient.GetFromJsonAsync<Rooms>($"http://localhost:5010/api/Rooms/{id}");
         }
 
         public async Task<Rooms> AddRoomAsync(Rooms room)
         {
             await InitializeAuthorizationHeader();
-            var response = await _httpClient.PostAsJsonAsync("http://localhost:5165/api/Rooms", room);
+            var response = await _httpClient.PostAsJsonAsync("http://localhost:5010/api/Rooms", room);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<Rooms>();
         }
@@ -58,15 +58,15 @@ namespace ParkBlazor.Services
         public async Task<Rooms> UpdateRoomAsync(Rooms room)
         {
             await InitializeAuthorizationHeader();
-            var response = await _httpClient.PutAsJsonAsync($"http://localhost:5165/api/Rooms/{room.Id}", room);
+            var response = await _httpClient.PutAsJsonAsync($"http://localhost:5010/api/Rooms/{room.Id}", room);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Rooms>();
+            return room;
         }
 
         public async Task<HttpStatusCode> DeleteRoomAsync(int id)
         {
             await InitializeAuthorizationHeader();
-            var response = await _httpClient.DeleteAsync($"http://localhost:5165/api/Rooms/{id}");
+            var response = await _httpClient.DeleteAsync($"http://localhost:5010/api/Rooms/{id}");
             return response.StatusCode;
         }
 
@@ -81,7 +81,7 @@ namespace ParkBlazor.Services
                 queryParams.Add($"parksId={parksId.Value}");
 
             var queryString = string.Join("&", queryParams);
-            return await _httpClient.GetFromJsonAsync<List<Rooms>>($"http://localhost:5165/api/Rooms/search?{queryString}");
+            return await _httpClient.GetFromJsonAsync<List<Rooms>>($"http://localhost:5010/api/Rooms/search?{queryString}");
         }
     }
 }

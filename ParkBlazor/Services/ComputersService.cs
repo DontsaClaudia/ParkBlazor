@@ -37,19 +37,19 @@ public class ComputersService
     public async Task<List<Computers>> GetAllComputersAsync()
     {
         await InitializeAuthorizationHeader();
-        return await _httpClient.GetFromJsonAsync<List<Computers>>("http://localhost:5165/api/Computers");
+        return await _httpClient.GetFromJsonAsync<List<Computers>>("http://localhost:5010/api/Computers");
     }
 
     public async Task<Computers> GetComputerByIdAsync(int id)
     {
         await InitializeAuthorizationHeader();
-        return await _httpClient.GetFromJsonAsync<Computers>($"http://localhost:5165/api/Computers/{id}");
+        return await _httpClient.GetFromJsonAsync<Computers>($"http://localhost:5010/api/Computers/{id}");
     }
 
     public async Task<Computers> AddComputerAsync(Computers computer)
     {
         await InitializeAuthorizationHeader();
-        var response = await _httpClient.PostAsJsonAsync("http://localhost:5165/api/Computers", computer);
+        var response = await _httpClient.PostAsJsonAsync("http://localhost:5010/api/Computers", computer);
         if (response.IsSuccessStatusCode)
         {
             return await response.Content.ReadFromJsonAsync<Computers>();
@@ -63,15 +63,15 @@ public class ComputersService
     public async Task<Computers> UpdateComputerAsync(Computers computer)
     {
         await InitializeAuthorizationHeader();
-        var response = await _httpClient.PutAsJsonAsync($"http://localhost:5165/api/Computers/{computer.Id}", computer);
+        var response = await _httpClient.PutAsJsonAsync($"http://localhost:5010/api/Computers/{computer.Id}", computer);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<Computers>();
+        return computer;
     }
 
     public async Task<HttpStatusCode> DeleteComputerAsync(int id)
     {
         await InitializeAuthorizationHeader();
-        var response = await _httpClient.DeleteAsync($"http://localhost:5165/api/Computers/{id}");
+        var response = await _httpClient.DeleteAsync($"http://localhost:5010/api/Computers/{id}");
         return response.StatusCode;
     }
 
@@ -92,13 +92,13 @@ public class ComputersService
             queryParams.Add($"maxMemory={maxMemory.Value}");
 
         var queryString = string.Join("&", queryParams);
-        return await _httpClient.GetFromJsonAsync<List<Computers>>($"http://localhost:5165/api/Computers/search?{queryString}");
+        return await _httpClient.GetFromJsonAsync<List<Computers>>($"http://localhost:5010/api/Computers/search?{queryString}");
     }
 
     public async Task<bool> ComputerExistsAsync(Computers computer)
     {
         await InitializeAuthorizationHeader();
-        var response = await _httpClient.PostAsJsonAsync("http://localhost:5165/api/Computers/exists", computer);
+        var response = await _httpClient.PostAsJsonAsync("http://localhost:5010/api/Computers/exists", computer);
         return await response.Content.ReadFromJsonAsync<bool>();
     }
 }
